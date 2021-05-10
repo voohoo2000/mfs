@@ -31,9 +31,9 @@ set_source_mirror(){
 	case $release in
 		ubuntu)
 				echo -e "${INFO}: $(cat /etc/apt/sources.list)"
-				sudo sed -e "s/\/\/.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
+				sudo sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list
-				sudo sed -e "s/\/\/.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
+				sudo sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list.d/*.*
 				echo -e "${INFO}: $release mirrors updated"
 				sudo apt update
@@ -42,10 +42,10 @@ set_source_mirror(){
 		debian)
 				echo -e "${INFO}: $(cat /etc/apt/sources.list)"
 				sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
-				 -e "s/\/\/.*.debian.org/\/\/.*mirrors.aliyun.com/g" \
+				 -e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list
 				sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
-				 -e "s/\/\/.*.debian.org/\/\/.*mirrors.aliyun.com/g" \
+				 -e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list.d/*.*
 				echo -e "${INFO}: $release mirrors updated"
 				sudo apt update
