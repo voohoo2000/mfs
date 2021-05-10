@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
 #===========================================================================================
-#  System Tested: CentOS 8+, Debian 10+, Ubuntu 19+, UOS 20+(开发模式), Kylin V4, Kylin V10+, Kylin V7
+#  System Tested: CentOS 8+, Debian 10+, Ubuntu 19+, UOS 20+(开发模式), Kylin V4, Kylin V10+
 #  Description: my favorite shell
 #  License: MIT License
 #===========================================================================================
