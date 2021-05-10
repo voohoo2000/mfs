@@ -119,6 +119,9 @@ install_zsh_plugins(){
 				sudo yum install wget -y
 				sudo yum install curl -y
 				sudo yum install zsh -y
+				#fix issue on centos8
+				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && sudo ln -s /usr/bin/python3 /usr/bin/python
+				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python2 ] && sudo ln -s /usr/bin/python2 /usr/bin/python
 				#avoid interactive
 				export SHELL=/bin/zsh
 				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
