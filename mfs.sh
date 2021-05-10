@@ -78,7 +78,7 @@ set_source_mirror(){
 		sudo sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
 	fi
 	if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
-		echo -e "$a$GITHUB_FST_ID\t$GITHUB_FST" | sudo tee -a /etc/hosts
+		echo -e "$a$GITHUB_FST_ID\t$GITHUB_FST" | sudo tee -a /etc/hostscat /
 	else
 		sudo sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
 	fi
@@ -115,9 +115,9 @@ install_zsh_plugins(){
   			echo -e "${INFO}: $release oh-my-zsh should be installed"
 				;;
 		centos)
-				sudo apt install git -y
-				sudo apt install wget -y
-				sudo apt install curl -y
+				sudo yum install git -y
+				sudo yum install wget -y
+				sudo yum install curl -y
 				sudo yum install zsh -y
 				#avoid interactive
 				export SHELL=/bin/zsh
