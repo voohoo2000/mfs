@@ -8,7 +8,7 @@ export PATH
 #  License: MIT License
 #===========================================================================================
 
-sh_ver="0.1.0"
+sh_ver="0.1.1"
 
 GREEN="\033[32m" && RED="\033[31;5m" && RESET="\033[0m"
 INFO="${GREEN}[信息]${RESET}"
@@ -31,13 +31,9 @@ set_source_mirror(){
 	case $release in
 		ubuntu)
 				echo -e "${INFO}: $(cat /etc/apt/sources.list)"
-				sudo sed -e "s/\/archive.ubuntu.com/mirrors.aliyun.com/g" \
-				 -e "s/cn.archive.ubuntu.com/mirrors.aliyun.com/g" \
-				 -e "s/security.ubuntu.com/mirrors.aliyun.com/g" \
+				sudo sed -e "s/\/\/.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list
-				sudo sed -e "s/\/archive.ubuntu.com/mirrors.aliyun.com/g" \
-				 -e "s/cn.archive.ubuntu.com/mirrors.aliyun.com/g" \
-				 -e "s/security.ubuntu.com/mirrors.aliyun.com/g" \
+				sudo sed -e "s/\/\/.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list.d/*.*
 				echo -e "${INFO}: $release mirrors updated"
 				sudo apt update
@@ -46,12 +42,10 @@ set_source_mirror(){
 		debian)
 				echo -e "${INFO}: $(cat /etc/apt/sources.list)"
 				sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
-				 -e "s/deb.debian.org/mirrors.aliyun.com/g" \
-				 -e "s/security.debian.org/mirrors.aliyun.com/g" \
+				 -e "s/\/\/.*.debian.org/\/\/.*mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list
 				sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
-				 -e "s/deb.debian.org/mirrors.aliyun.com/g" \
-				 -e "s/security.debian.org/mirrors.aliyun.com/g" \
+				 -e "s/\/\/.*.debian.org/\/\/.*mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list.d/*.*
 				echo -e "${INFO}: $release mirrors updated"
 				sudo apt update
@@ -71,17 +65,37 @@ set_source_mirror(){
 				sudo yum makecache
 				;;
 	esac
+
+	echo -e "${INFO}: speedup github"
+	GITHUB_COM_IP="140.82.114.3"
+	GITHUB_COM="github.com"
+	GITHUB_FST_ID="199.232.69.194"
+	GITHUB_FST="github.global.ssl.fastly.net"
+
+	if [ `sed -n "/$GITHUB_COM/p" /etc/hosts | wc -l` -eq 0 ]; then
+		sudo echo -e "$GITHUB_COM_IP\t$GITHUB_COM" >> /etc/hosts
+	else
+		sudo sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
+	fi
+	if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
+		sudo echo -e "$a$GITHUB_FST_ID\t$GITHUB_FST" >> /etc/hosts
+	else
+		sudo sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
+	fi
+
 }
 
 install_tldr(){
 	case $release in
 		ubuntu|debian)
-				sudo apt install tldr -y
-				echo -e "${INFO}: $release tldr should be installed if tldr exist in REPO"
+				sudo apt install npm -y
+				sudo npm install -g tldr
+				echo -e "${INFO}: $release tldr should be installed"
 				;;
 		centos|NeoKylin)
-				sudo yum install tldr -y
-				echo -e "${INFO}: centos tldr should be installed if tldr exist in REPO"
+				sudo yum install npm -y
+				sudo npm install -g tldr
+				echo -e "${INFO}: $release tldr should be installed"
 				;;
 	esac
 }
@@ -89,21 +103,26 @@ install_tldr(){
 install_zsh_plugins(){
 	case $release in
 		ubuntu|debian)
-				sudo apt install git wget curl python -y
+				sudo apt install git -y
+				sudo apt install wget -y
+				sudo apt install curl -y
+				sudo apt install python -y
 				sudo apt install zsh -y
 				#avoid interactive
 				export SHELL=/bin/zsh
-				#sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
-				sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
+				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
+				#sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
   			echo -e "${INFO}: $release oh-my-zsh should be installed"
 				;;
 		centos)
-				sudo yum install git wget curl python -y
+				sudo apt install git -y
+				sudo apt install wget -y
+				sudo apt install curl -y
 				sudo yum install zsh -y
 				#avoid interactive
 				export SHELL=/bin/zsh
-				#sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
-				sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
+				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
+				#sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
 				echo -e "${INFO}: centos oh-my-zsh should be installed"
 				;;
 		NeoKylin)
@@ -204,7 +223,7 @@ echo -e " Linux环境配置一键脚本 ${GREEN}[v${sh_ver}]${RESET}
 ———————————————————————————————安装脚本———————————————————————————————
  ${MSG_SUDO}
  ${GREEN}1.${RESET} 全部安装
- ${GREEN}2.${RESET} 更改国内镜像源(debian, ubuntu, centos)
+ ${GREEN}2.${RESET} 更改国内镜像源(debian, ubuntu, centos)，加速Github
  ${GREEN}3.${RESET} 安装zsh及插件(autosuggestions, autojump, zsh-syntax-highlighting)
  ${GREEN}4.${RESET} 安装tldr插件(命令帮助)
  ${GREEN}5.${RESET} 安装vim及vimrc
