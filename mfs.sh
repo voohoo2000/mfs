@@ -159,7 +159,7 @@ install_zsh_plugins(){
 	sed -i 's/^ZSH_THEME="[[:print:]]*"/ZSH_THEME="ys"/g' $HOME/.zshrc
 	sed -i 's/^plugins=([[:print:]]*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting autojump)/g' $HOME/.zshrc
 	
-	sudo chsh -s /bin/zsh
+	chsh -s /bin/zsh
 }
 
 install_vimrc(){
