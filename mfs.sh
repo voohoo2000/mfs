@@ -73,12 +73,12 @@ set_source_mirror(){
 	GITHUB_FST="github.global.ssl.fastly.net"
 
 	if [ `sed -n "/$GITHUB_COM/p" /etc/hosts | wc -l` -eq 0 ]; then
-		sudo echo -e "$GITHUB_COM_IP\t$GITHUB_COM" >> /etc/hosts
+		echo -e "$GITHUB_COM_IP\t$GITHUB_COM" | sudo tee -a /etc/hosts
 	else
 		sudo sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
 	fi
 	if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
-		sudo echo -e "$a$GITHUB_FST_ID\t$GITHUB_FST" >> /etc/hosts
+		echo -e "$a$GITHUB_FST_ID\t$GITHUB_FST" | sudo tee -a /etc/hosts
 	else
 		sudo sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
 	fi
