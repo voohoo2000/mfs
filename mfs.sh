@@ -8,7 +8,7 @@ export PATH
 #  License: MIT License
 #===========================================================================================
 
-sh_ver="0.1.1"
+sh_ver="0.1.2"
 
 GREEN="\033[32m" && RED="\033[31;5m" && RESET="\033[0m"
 INFO="${GREEN}[信息]${RESET}"
@@ -30,24 +30,20 @@ set_source_mirror(){
 	echo -e "${INFO}: set_source_mirror"
 	case $release in
 		ubuntu)
-				echo -e "${INFO}: $(cat /etc/apt/sources.list)"
 				sudo sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list
 				sudo sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list.d/*.*
-				echo -e "${INFO}: $release mirrors updated"
 				sudo apt update
 				sudo apt upgrade -y
 				;;
 		debian)
-				echo -e "${INFO}: $(cat /etc/apt/sources.list)"
 				sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
 				 -e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list
 				sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
 				 -e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 				 -i.bak /etc/apt/sources.list.d/*.*
-				echo -e "${INFO}: $release mirrors updated"
 				sudo apt update
 				sudo apt upgrade -y
 				;;
@@ -55,12 +51,10 @@ set_source_mirror(){
 				sudo sed -e 's|^mirrorlist=|#mirrorlist=|g' \
          -e 's|^#baseurl=http://mirror.centos.org|baseurl=http://mirrors.aliyun.com|g' \
          -i.bak /etc/yum.repos.d/CentOS-*.repo
-				echo -e "${INFO}: $release mirrors updated"
 				sudo yum clean all
 				sudo yum makecache
 				;;
 		NeoKylin)
-				echo -e "${INFO}: $release mirrors updated"
 				sudo yum clean all
 				sudo yum makecache
 				;;
@@ -86,21 +80,21 @@ set_source_mirror(){
 }
 
 install_tldr(){
+	echo -e "${INFO}: install_tldr"
 	case $release in
 		ubuntu|debian)
 				sudo apt install npm -y
 				sudo npm install -g tldr
-				echo -e "${INFO}: $release tldr should be installed"
 				;;
 		centos|NeoKylin)
 				sudo yum install npm -y
 				sudo npm install -g tldr
-				echo -e "${INFO}: $release tldr should be installed"
 				;;
 	esac
 }
 
 install_zsh_plugins(){
+	echo -e "${INFO}: install_zsh_plugins"
 	case $release in
 		ubuntu|debian)
 				sudo apt install git -y
@@ -112,7 +106,6 @@ install_zsh_plugins(){
 				export SHELL=/bin/zsh
 				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
 				#sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
-  			echo -e "${INFO}: $release oh-my-zsh should be installed"
 				;;
 		centos)
 				sudo yum install git -y
@@ -126,7 +119,6 @@ install_zsh_plugins(){
 				export SHELL=/bin/zsh
 				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
 				#sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
-				echo -e "${INFO}: centos oh-my-zsh should be installed"
 				;;
 		NeoKylin)
 				return
@@ -138,13 +130,11 @@ install_zsh_plugins(){
 	if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
 		git clone git://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 		#echo "source $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> $HOME/.zshrc
-		echo -e "${INFO}: zsh-autosuggestions should be installed"
 	fi
 
 	if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
 		git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 		#echo "source $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> $HOME/.zshrc
-		echo -e "${INFO}: zsh-syntax-highlighting should be installed"
 	fi
 
 	if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/autojump" ]; then
@@ -153,7 +143,6 @@ install_zsh_plugins(){
 		./install.py
 		cd $HOME
 		#echo "[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh" >> $HOME/.zshrc
-		echo -e "${INFO}: autojump should be installed"
 	fi
 
 	sed -i 's/^ZSH_THEME="[[:print:]]*"/ZSH_THEME="ys"/g' $HOME/.zshrc
@@ -163,6 +152,7 @@ install_zsh_plugins(){
 }
 
 install_vimrc(){
+	echo -e "${INFO}: install_vimrc"
 	case $release in
 		ubuntu|debian)
 				sudo apt install curl git gcc make vim -y
