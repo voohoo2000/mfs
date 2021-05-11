@@ -268,7 +268,7 @@ esac
 check_sys(){
 	[ -f /etc/os-release ] && source /etc/os-release
 
-	OS_NAME=${PRETTY_NAME,,}
+	OS_NAME=`echo $PRETTY_NAME | tr [A-Z] [a-z]`
 
   case $OS_NAME in
 		debian*)
