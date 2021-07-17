@@ -42,6 +42,7 @@ set_source_mirror(){
 					-i.bak /etc/apt/sources.list.d/*.*
 				$SUDO_CMD apt update
 				$SUDO_CMD apt upgrade -y
+				$SUDO_CMD apt install curl -y
 				;;
 		debian)
 				[ -f /etc/apt/sources.list ] && $SUDO_CMD sed -e "s/^deb cdrom/# deb cdrom/g" \
@@ -52,6 +53,7 @@ set_source_mirror(){
 					-i.bak /etc/apt/sources.list.d/*.*
 				$SUDO_CMD apt update
 				$SUDO_CMD apt upgrade -y
+				$SUDO_CMD apt install curl -y
 				;;
 		centos)
 				$SUDO_CMD sed -e 's|^mirrorlist=|#mirrorlist=|g' \
@@ -59,17 +61,19 @@ set_source_mirror(){
          -i.bak /etc/yum.repos.d/CentOS-*.repo
 				$SUDO_CMD yum clean all
 				$SUDO_CMD yum makecache
+				$SUDO_CMD yum install curl -y
 				;;
 		neokylin)
 				$SUDO_CMD yum clean all
 				$SUDO_CMD yum makecache
+				$SUDO_CMD yum install curl -y
 				;;
 	esac
 
 	echo -e "${INFO}: speedup github"
 	GITHUB_COM_IP=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://github.com.ipaddress.com 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
 	GITHUB_COM="github.com"
-	GITHUB_FST_ID=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://fastly.net.ipaddress.com/github.global.ssl.fastly.net\#ipinfo 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
+	GITHUB_FST_IP=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://fastly.net.ipaddress.com/github.global.ssl.fastly.net\#ipinfo 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
 	GITHUB_FST="github.global.ssl.fastly.net"
 
 	if [ -n "$GITHUB_COM_IP" ]; then
@@ -80,11 +84,11 @@ set_source_mirror(){
 		fi
 	fi
 
-	if [ -n "$GITHUB_FST_ID" ]; then
+	if [ -n "$GITHUB_FST_IP" ]; then
 		if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
-			echo -e "$GITHUB_FST_ID\t$GITHUB_FST" | $SUDO_CMD tee -a /etc/hosts
+			echo -e "$GITHUB_FST_IP\t$GITHUB_FST" | $SUDO_CMD tee -a /etc/hosts
 		else
-			$SUDO_CMD sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
+			$SUDO_CMD sed -i "s/.*$GITHUB_FST/$GITHUB_FST_IP\t$GITHUB_FST/g" /etc/hosts
 		fi
 	fi
 
