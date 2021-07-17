@@ -102,6 +102,9 @@ install_tldr(){
 				$SUDO_CMD apt install npm -y
 				$SUDO_CMD npm install -g tldr
 				;;
+		centos)
+		    $SUDO_CMD pip3 install tldr
+				;;
 		centos|neokylin)
 				$SUDO_CMD yum install npm -y
 				$SUDO_CMD npm install -g tldr
@@ -127,7 +130,7 @@ install_zsh_plugins(){
 				$SUDO_CMD yum install git -y
 				$SUDO_CMD yum install wget -y
 				$SUDO_CMD yum install curl -y
-				$SUDO_CMD apt install python3 -y
+				$SUDO_CMD yum install python3 -y
 				$SUDO_CMD yum install zsh -y
 				#fix issue on centos8
 				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && $SUDO_CMD ln -s /usr/bin/python3 /usr/bin/python
