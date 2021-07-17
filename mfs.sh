@@ -33,7 +33,7 @@ check_user(){
 }
 
 set_source_mirror(){
-	echo "${INFO}: set_source_mirror"
+	echo -e "${INFO}: set_source_mirror"
 	case $release in
 		ubuntu)
 				[ -f /etc/apt/sources.list ] && $SUDO_CMD sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
