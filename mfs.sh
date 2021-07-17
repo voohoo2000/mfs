@@ -127,6 +127,7 @@ install_zsh_plugins(){
 				$SUDO_CMD yum install git -y
 				$SUDO_CMD yum install wget -y
 				$SUDO_CMD yum install curl -y
+				$SUDO_CMD apt install python3 -y
 				$SUDO_CMD yum install zsh -y
 				#fix issue on centos8
 				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && $SUDO_CMD ln -s /usr/bin/python3 /usr/bin/python
