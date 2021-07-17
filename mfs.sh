@@ -70,7 +70,7 @@ set_source_mirror(){
 				;;
 	esac
 
-	echo "${INFO}: speedup github"
+	echo -e "${INFO}: speedup github"
 	GITHUB_COM_IP=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://github.com.ipaddress.com 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
 	GITHUB_COM="github.com"
 	GITHUB_FST_IP=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://fastly.net.ipaddress.com/github.global.ssl.fastly.net\#ipinfo 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
@@ -96,7 +96,7 @@ set_source_mirror(){
 }
 
 install_tldr(){
-	echo "${INFO}: install_tldr"
+	echo -e "${INFO}: install_tldr"
 	case $release in
 		ubuntu|debian)
 				$SUDO_CMD apt install npm -y
@@ -110,7 +110,7 @@ install_tldr(){
 }
 
 install_zsh_plugins(){
-	echo "${INFO}: install_zsh_plugins"
+	echo -e "${INFO}: install_zsh_plugins"
 	case $release in
 		ubuntu|debian)
 				$SUDO_CMD apt install git -y
@@ -168,7 +168,7 @@ install_zsh_plugins(){
 }
 
 install_vimrc(){
-	echo "${INFO}: install_vimrc"
+	echo -e "${INFO}: install_vimrc"
 	case $release in
 		ubuntu|debian)
 				$SUDO_CMD apt install curl git gcc make vim -y
@@ -227,7 +227,7 @@ add_user_to_sudo_group(){
 
 start_menu(){
 clear
-echo " Linux环境配置一键脚本 ${GREEN}[v${sh_ver}]${RESET}
+echo -e " Linux环境配置一键脚本 ${GREEN}[v${sh_ver}]${RESET}
 
 ———————————————————————————————安装脚本———————————————————————————————
  ${MSG_SUDO}
@@ -274,7 +274,7 @@ case "$num" in
 	;;
 	*)
 	clear
-	echo "${ERROR}:请输入正确数字 [1-6, 9, 0]"
+	echo -e "${ERROR}:请输入正确数字 [1-6, 9, 0]"
 	sleep 5s
 	start_menu
 	;;
@@ -306,10 +306,10 @@ check_sys(){
 
 	bit=`uname -m`
 
-	echo "${INFO}: check_sys: os_ori=$NAME, os_to=$release, ver=$VERSION_ID, arch=$bit"
+	echo -e "${INFO}: check_sys: os_ori=$NAME, os_to=$release, ver=$VERSION_ID, arch=$bit"
 }
 
 check_sys
-[[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && [[ ${release} != "neokylin" ]]&& echo "${ERROR} 本脚本不支持当前系统 ${release} !" && exit 1
+[[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && [[ ${release} != "neokylin" ]]&& echo -e "${ERROR} 本脚本不支持当前系统 ${release} !" && exit 1
 check_user
 start_menu
