@@ -40,7 +40,7 @@ set_source_mirror(){
 				 	-i.bak /etc/apt/sources.list
 				[ -d /etc/apt/sources.list.d ] && $SUDO_CMD sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 					-i.bak /etc/apt/sources.list.d/*.*
-				$SUDO_CMD apt update
+				$SUDO_CMD apt update --fix-missing
 				$SUDO_CMD apt upgrade -y
 				$SUDO_CMD apt install curl -y
 				;;
@@ -51,7 +51,7 @@ set_source_mirror(){
 				[ -d /etc/apt/sources.list.d ] && $SUDO_CMD sed -e "s/^deb cdrom/# deb cdrom/g" \
 					-e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 					-i.bak /etc/apt/sources.list.d/*.*
-				$SUDO_CMD apt update
+				$SUDO_CMD apt update --fix-missing
 				$SUDO_CMD apt upgrade -y
 				$SUDO_CMD apt install curl -y
 				;;
