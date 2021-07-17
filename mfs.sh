@@ -14,49 +14,55 @@ GREEN="\033[32m" && RED="\033[31;5m" && RESET="\033[0m"
 INFO="${GREEN}[信息]${RESET}"
 ERROR="${RED}[错误]${RESET}"
 
-check_sudo(){
-	sudo -v
-	case $? in
-		0)
-			MSG_SUDO=""
-			;;
-		*)
-			MSG_SUDO="\n${ERROR} ${GREEN}$(logname)${RESET}不在sudo组，请选择[${GREEN}9${RESET}]输入root密码后重新登录运行此脚本!\n"
-			;;
-	esac
+check_user(){
+	if [ `id -u` -eq 0 ];then
+		MSG_SUDO=""
+		SUDO_CMD=
+	else
+		SUDO_CMD=sudo
+		$SUDO_CMD -v
+		case $? in
+			0)
+				MSG_SUDO=""
+				;;
+			*)
+				MSG_SUDO="\n${ERROR} ${GREEN}$(logname)${RESET}不在sudo组，请选择[${GREEN}9${RESET}]输入root密码后重新登录运行此脚本!\n"
+				;;
+		esac
+	fi
 }
 
 set_source_mirror(){
 	echo -e "${INFO}: set_source_mirror"
 	case $release in
 		ubuntu)
-				[ -f /etc/apt/sources.list ] && sudo sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
+				[ -f /etc/apt/sources.list ] && $SUDO_CMD sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 				 	-i.bak /etc/apt/sources.list
-				[ -d /etc/apt/sources.list.d ] && sudo sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
+				[ -d /etc/apt/sources.list.d ] && $SUDO_CMD sed -e "s/\/\/\.*.ubuntu.com/\/\/mirrors.aliyun.com/g" \
 					-i.bak /etc/apt/sources.list.d/*.*
-				sudo apt update
-				sudo apt upgrade -y
+				$SUDO_CMD apt update
+				$SUDO_CMD apt upgrade -y
 				;;
 		debian)
-				[ -f /etc/apt/sources.list ] && sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
+				[ -f /etc/apt/sources.list ] && $SUDO_CMD sed -e "s/^deb cdrom/# deb cdrom/g" \
 					-e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 					-i.bak /etc/apt/sources.list
-				[ -d /etc/apt/sources.list.d ] && sudo sed -e "s/^deb cdrom/# deb cdrom/g" \
+				[ -d /etc/apt/sources.list.d ] && $SUDO_CMD sed -e "s/^deb cdrom/# deb cdrom/g" \
 					-e "s/\/\/.*.debian.org/\/\/mirrors.aliyun.com/g" \
 					-i.bak /etc/apt/sources.list.d/*.*
-				sudo apt update
-				sudo apt upgrade -y
+				$SUDO_CMD apt update
+				$SUDO_CMD apt upgrade -y
 				;;
 		centos)
-				sudo sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+				$SUDO_CMD sed -e 's|^mirrorlist=|#mirrorlist=|g' \
          -e 's|^#baseurl=http://mirror.centos.org|baseurl=http://mirrors.aliyun.com|g' \
          -i.bak /etc/yum.repos.d/CentOS-*.repo
-				sudo yum clean all
-				sudo yum makecache
+				$SUDO_CMD yum clean all
+				$SUDO_CMD yum makecache
 				;;
 		neokylin)
-				sudo yum clean all
-				sudo yum makecache
+				$SUDO_CMD yum clean all
+				$SUDO_CMD yum makecache
 				;;
 	esac
 
@@ -68,17 +74,17 @@ set_source_mirror(){
 
 	if [ -n "$GITHUB_COM_IP" ]; then
 		if [ `sed -n "/$GITHUB_COM/p" /etc/hosts | wc -l` -eq 0 ]; then
-			echo -e "$GITHUB_COM_IP\t$GITHUB_COM" | sudo tee -a /etc/hosts
+			echo -e "$GITHUB_COM_IP\t$GITHUB_COM" | $SUDO_CMD tee -a /etc/hosts
 		else
-			sudo sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
+			$SUDO_CMD sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
 		fi
 	fi
 
 	if [ -n "$GITHUB_FST_ID" ]; then
 		if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
-			echo -e "$GITHUB_FST_ID\t$GITHUB_FST" | sudo tee -a /etc/hosts
+			echo -e "$GITHUB_FST_ID\t$GITHUB_FST" | $SUDO_CMD tee -a /etc/hosts
 		else
-			sudo sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
+			$SUDO_CMD sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
 		fi
 	fi
 
@@ -88,12 +94,12 @@ install_tldr(){
 	echo -e "${INFO}: install_tldr"
 	case $release in
 		ubuntu|debian)
-				sudo apt install npm -y
-				sudo npm install -g tldr
+				$SUDO_CMD apt install npm -y
+				$SUDO_CMD npm install -g tldr
 				;;
 		centos|neokylin)
-				sudo yum install npm -y
-				sudo npm install -g tldr
+				$SUDO_CMD yum install npm -y
+				$SUDO_CMD npm install -g tldr
 				;;
 	esac
 }
@@ -102,24 +108,24 @@ install_zsh_plugins(){
 	echo -e "${INFO}: install_zsh_plugins"
 	case $release in
 		ubuntu|debian)
-				sudo apt install git -y
-				sudo apt install wget -y
-				sudo apt install curl -y
-				sudo apt install python -y
-				sudo apt install zsh -y
+				$SUDO_CMD apt install git -y
+				$SUDO_CMD apt install wget -y
+				$SUDO_CMD apt install curl -y
+				$SUDO_CMD apt install python -y
+				$SUDO_CMD apt install zsh -y
 				#avoid interactive
 				export SHELL=/bin/zsh
 				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
 				#sh -c "$(wget -qO- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh | grep -v 'exec zsh')"
 				;;
 		centos)
-				sudo yum install git -y
-				sudo yum install wget -y
-				sudo yum install curl -y
-				sudo yum install zsh -y
+				$SUDO_CMD yum install git -y
+				$SUDO_CMD yum install wget -y
+				$SUDO_CMD yum install curl -y
+				$SUDO_CMD yum install zsh -y
 				#fix issue on centos8
-				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && sudo ln -s /usr/bin/python3 /usr/bin/python
-				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python2 ] && sudo ln -s /usr/bin/python2 /usr/bin/python
+				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && $SUDO_CMD ln -s /usr/bin/python3 /usr/bin/python
+				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python2 ] && $SUDO_CMD ln -s /usr/bin/python2 /usr/bin/python
 				#avoid interactive
 				export SHELL=/bin/zsh
 				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
@@ -160,10 +166,10 @@ install_vimrc(){
 	echo -e "${INFO}: install_vimrc"
 	case $release in
 		ubuntu|debian)
-				sudo apt install curl git gcc make vim -y
+				$SUDO_CMD apt install curl git gcc make vim -y
 				;;
 		centos|neokylin)
-				sudo yum install curl git gcc make vim -y
+				$SUDO_CMD yum install curl git gcc make vim -y
 				;;
 	esac
 	
@@ -300,5 +306,5 @@ check_sys(){
 
 check_sys
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && [[ ${release} != "neokylin" ]]&& echo -e "${ERROR} 本脚本不支持当前系统 ${release} !" && exit 1
-check_sudo
+check_user
 start_menu
