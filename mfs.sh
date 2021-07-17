@@ -61,20 +61,25 @@ set_source_mirror(){
 	esac
 
 	echo -e "${INFO}: speedup github"
-	GITHUB_COM_IP="140.82.114.3"
+	GITHUB_COM_IP=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://github.com.ipaddress.com 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
 	GITHUB_COM="github.com"
-	GITHUB_FST_ID="199.232.69.194"
+	GITHUB_FST_ID=`curl --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" https://fastly.net.ipaddress.com/github.global.ssl.fastly.net\#ipinfo 2>/dev/null | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -n '2p'`
 	GITHUB_FST="github.global.ssl.fastly.net"
 
-	if [ `sed -n "/$GITHUB_COM/p" /etc/hosts | wc -l` -eq 0 ]; then
-		echo -e "$GITHUB_COM_IP\t$GITHUB_COM" | sudo tee -a /etc/hosts
-	else
-		sudo sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
+	if [ -n "$GITHUB_COM_IP" ]; then
+		if [ `sed -n "/$GITHUB_COM/p" /etc/hosts | wc -l` -eq 0 ]; then
+			echo -e "$GITHUB_COM_IP\t$GITHUB_COM" | sudo tee -a /etc/hosts
+		else
+			sudo sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
+		fi
 	fi
-	if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
-		echo -e "$a$GITHUB_FST_ID\t$GITHUB_FST" | sudo tee -a /etc/hosts
-	else
-		sudo sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
+
+	if [ -n "$GITHUB_FST_ID" ]; then
+		if [ `sed -n "/$GITHUB_FST/p" /etc/hosts | wc -l` -eq 0 ]; then
+			echo -e "$GITHUB_FST_ID\t$GITHUB_FST" | sudo tee -a /etc/hosts
+		else
+			sudo sed -i "s/.*$GITHUB_FST/$GITHUB_FST_ID\t$GITHUB_FST/g" /etc/hosts
+		fi
 	fi
 
 }
