@@ -1,6 +1,7 @@
 # mfs (my favorite shell)
 
 # 如何使用
+`sh -c "$(curl -fsSL https://raw.githubusercontent.com/voohoo2000/mfs/main/mfs.sh)"`
 `sh -c "$(wget -qO- https://raw.githubusercontent.com/voohoo2000/mfs/main/mfs.sh)"`
 # 功能
 1. 更改国内镜像源(debian, ubuntu, centos)，加速Github

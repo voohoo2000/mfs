@@ -99,15 +99,12 @@ install_tldr(){
 	echo "${INFO}: install_tldr"
 	case $release in
 		ubuntu|debian)
-				$SUDO_CMD apt install npm -y
-				$SUDO_CMD npm install -g tldr
-				;;
-		centos)
-		    $SUDO_CMD pip3 install tldr
+				$SUDO_CMD apt install python3 python3-pip -y
+				$SUDO_CMD pip3 install tldr
 				;;
 		centos|neokylin)
-				$SUDO_CMD yum install npm -y
-				$SUDO_CMD npm install -g tldr
+				$SUDO_CMD yum install python3 python3-pip -y
+		    $SUDO_CMD pip3 install tldr
 				;;
 	esac
 }
@@ -119,8 +116,10 @@ install_zsh_plugins(){
 				$SUDO_CMD apt install git -y
 				$SUDO_CMD apt install wget -y
 				$SUDO_CMD apt install curl -y
-				$SUDO_CMD apt install python -y
+				$SUDO_CMD apt install python3 -y
 				$SUDO_CMD apt install zsh -y
+				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && $SUDO_CMD ln -s /usr/bin/python3 /usr/bin/python
+				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python2 ] && $SUDO_CMD ln -s /usr/bin/python2 /usr/bin/python
 				#avoid interactive
 				export SHELL=/bin/zsh
 				sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | grep -v 'exec zsh')"
@@ -132,7 +131,6 @@ install_zsh_plugins(){
 				$SUDO_CMD yum install curl -y
 				$SUDO_CMD yum install python3 -y
 				$SUDO_CMD yum install zsh -y
-				#fix issue on centos8
 				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python3 ] && $SUDO_CMD ln -s /usr/bin/python3 /usr/bin/python
 				[ ! -f /usr/bin/python ] && [ -f /usr/bin/python2 ] && $SUDO_CMD ln -s /usr/bin/python2 /usr/bin/python
 				#avoid interactive
