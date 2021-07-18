@@ -78,7 +78,7 @@ set_source_mirror(){
 
 	if [ -n "$GITHUB_COM_IP" ]; then
 		if [ `sed -n "/$GITHUB_COM/p" /etc/hosts | wc -l` -eq 0 ]; then
-			echo >> /etc/hosts
+			$SUDO_CMD sh -c "echo >> /etc/hosts"
 			echo "$GITHUB_COM_IP	$GITHUB_COM" | $SUDO_CMD tee -a /etc/hosts
 		else
 			$SUDO_CMD sed -i "s/.*$GITHUB_COM/$GITHUB_COM_IP\t$GITHUB_COM/g" /etc/hosts
