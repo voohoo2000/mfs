@@ -295,7 +295,7 @@ check_sys(){
 		ubuntu*|uniontech*|uos*|"linux mint*")
 			release="ubuntu"
 			;;
-		centos*)
+		centos*|fedora*)
 			release="centos"
 			;;
 		neokylin*)
