@@ -8,7 +8,7 @@ export PATH
 #  License: MIT License
 #===========================================================================================
 
-sh_ver="0.2.0"
+sh_ver="0.5.0"
 
 GREEN=$(printf '\033[32m') && RED=$(printf '\033[31;5m') && RESET=$(printf '\033[0m')
 INFO="${GREEN}[信息]${RESET}"
@@ -312,6 +312,5 @@ check_sys(){
 }
 
 check_sys
-[[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && [[ ${release} != "neokylin" ]]&& echo "${ERROR} 本脚本不支持当前系统 ${release} !" && exit 1
 check_user
 start_menu
